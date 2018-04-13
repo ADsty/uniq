@@ -13,6 +13,7 @@ public class FileLineIterator
     private FileReader reader;
     private BufferedReader in = null;
     private String string = null;
+    private String lastString = null;
 
     public FileLineIterator(File file)
             throws IOException {
@@ -36,7 +37,7 @@ public class FileLineIterator
     }
 
     public String getString() {
-        return string;
+        return lastString;
     }
 
     @Override
@@ -48,6 +49,7 @@ public class FileLineIterator
     public String next()
             throws NoSuchElementException {
         String returnString = string;
+        lastString = string;
         try {
             if (string == null) {
                 throw new NoSuchElementException("Next line is not available");

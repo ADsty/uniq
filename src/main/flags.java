@@ -66,14 +66,14 @@ public class flags {
         FileLineIterator iterator = new FileLineIterator(inputFile);
         File forChanges = new File("forChanges.txt");
         BufferedWriter writer = new BufferedWriter(new FileWriter(forChanges));
+        j = iterator.next();
         while (iterator.hasNext()) {
-            p = iterator.getString();
+            j = iterator.getString();
+            p = j;
+            h = iterator.next();
             if (sNum != 0) {
-                j = iterator.getString().substring(sNum);
-                h = iterator.next().substring(sNum);
-            } else {
-                j = iterator.getString();
-                h = iterator.next();
+                j = j.substring(sNum);
+                h = h.substring(sNum);
             }
             if (i) {
                 j = j.toLowerCase();
@@ -87,6 +87,13 @@ public class flags {
                 } else {
                     writer.write(p);
                     writer.newLine();
+                }
+                if (!iterator.hasNext()) {
+                    if (c) {
+                        writer.write(Integer.toString(s) + iterator.getString());
+                    } else {
+                        writer.write(iterator.getString());
+                    }
                 }
             } else {
                 if (u) {
