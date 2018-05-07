@@ -1,5 +1,4 @@
 
-
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -10,7 +9,7 @@ import java.io.IOException;
 /**
  * Command-line launcher of the program
  * Combining sequences of identical consecutive lines in a file into one
- * Flags which you need to set for identify how lines will be compared:
+ * java.Flags which you need to set for identify how lines will be compared:
  * -i     means that while comparing lines, case should be ignored
  * -s N   means that while comparing lines, the first N characters of each line should be ignored
  * -u     means that only unique lines should be output as a result

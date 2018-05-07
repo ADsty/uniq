@@ -1,6 +1,6 @@
 
-
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 class Flags {
@@ -113,6 +113,7 @@ class Flags {
      * @throws IOException
      */
     void work() throws Exception {
+        ArrayList<String> listForU = new ArrayList<>();
         counterForC = 0;
         int delayBeforeTheStart = 0;
         if (inputFileName.equals("")) scannerIsEnable();
@@ -135,24 +136,30 @@ class Flags {
             if (sNum != 0) changesWithS();
             if (i) changesWithI();
             if (!firstLineForChanges.equals(secondLineForChanges)) {
+                if (u) {
+                    if (!listForU.contains(firstLineForChanges)) listForU.add(firstLineForChanges);
+                    else continue;
+                }
                 if (c) changesWithC(firstLineWithoutChanges);
                 else changesWithoutC(firstLineWithoutChanges);
                 if (!scanner.hasNextLine()) {
-                    if (c) changesWithC(secondLineWithoutChanges);
-                    else writer.write(secondLineWithoutChanges);
+                    if (u) {
+                        if (!listForU.contains(firstLineForChanges)) {
+                            if (c) changesWithC(secondLineWithoutChanges);
+                            else writer.write(secondLineWithoutChanges);
+                        }
+                    } else {
+                        if (c) changesWithC(secondLineWithoutChanges);
+                        else writer.write(secondLineWithoutChanges);
+                    }
                 }
             } else {
-                if (u) {
-                    if (!scanner.hasNextLine()) {
-                        if (c) changesWithC(firstLineWithoutChanges);
-                        else changesWithoutC(firstLineWithoutChanges);
-                    }
-                    if (c) {
-                        counterForC++ ;
-                    }
-                } else {
+                if (!scanner.hasNextLine()) {
                     if (c) changesWithC(firstLineWithoutChanges);
-                    else changesWithoutC(firstLineForChanges);
+                    else changesWithoutC(firstLineWithoutChanges);
+                }
+                if (c) {
+                    counterForC++;
                 }
             }
         }
@@ -164,7 +171,7 @@ class Flags {
     }
 
     /**
-     * New elements of the class Flags starts without the values of all flags
+     * New elements of the class java.Flags starts without the values of all flags
      * To set values of flags you need to use set() methods of flags which you will find
      */
     Flags() {
