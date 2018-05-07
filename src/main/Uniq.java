@@ -7,6 +7,17 @@ import org.kohsuke.args4j.Option;
 
 import java.io.IOException;
 
+/**
+ * Command-line launcher of the program
+ * Combining sequences of identical consecutive lines in a file into one
+ * Flags which you need to set for identify how lines will be compared:
+ * -i     means that while comparing lines, case should be ignored
+ * -s N   means that while comparing lines, the first N characters of each line should be ignored
+ * -u     means that only unique lines should be output as a result
+ * -c     means that before each output line, writes the number of lines that have been replaced by this one
+ * -o     set the name of the output file. If there is no parameter, prints the results in the console
+ * (file name) set the name of the input file. If there is no parameter, it reads the text from the console.
+ */
 public class Uniq {
     @Option(name = "-i", usage = "When comparing strings, you should ignore case")
     private boolean i;

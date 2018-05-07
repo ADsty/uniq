@@ -3,7 +3,7 @@
 import java.io.*;
 import java.util.Scanner;
 
-public class Flags {
+class Flags {
     private boolean i;
     private boolean c;
     private boolean u;
@@ -14,19 +14,19 @@ public class Flags {
     /**
      * Sets path to the input file
      *
-     * @param x is path to the input file
+     * @param path is path to the input file
      */
-    void setFileName(String x) {
-        this.inputFileName = x;
+    void setFileName(String path) {
+        this.inputFileName = path;
     }
 
     /**
      * Sets path to the output file
      *
-     * @param x is path to the output file
+     * @param path is path to the output file
      */
-    void setOutputFileName(String x) {
-        this.outputFileName = x;
+    void setOutputFileName(String path) {
+        this.outputFileName = path;
     }
 
     /**
@@ -53,8 +53,8 @@ public class Flags {
     /**
      * Sets the flag S value if it was found
      */
-    void setSNum(int x) {
-        this.sNum = x;
+    void setSNum(int num) {
+        this.sNum = num;
     }
 
     /**
@@ -65,10 +65,12 @@ public class Flags {
      */
     void work() throws IOException {
         Scanner scanner;
-        String j;
-        String h;
-        String p = "";
-        String o;
+        String firstLineForChanges;
+        String firstLineWithoutChanges;
+        String secondLineForChanges;
+        String secondLineWithoutChanges = "";
+        int counterForC = 0;
+        int delayBeforeTheStart = 0;
         if (inputFileName.equals("")) {
             scanner = new Scanner(System.in);
             System.out.println("Input from the console is enabled");
@@ -76,77 +78,75 @@ public class Flags {
         } else {
             scanner = new Scanner(new File(inputFileName));
         }
-        int s = 0;
-        int g = 0;
         File forChanges = new File("forChanges.txt");
         BufferedWriter writer = new BufferedWriter(new FileWriter(forChanges));
         while (scanner.hasNextLine()) {
-            j = p;
-            o = j;
-            h = scanner.nextLine();
-            p = h;
-            if (g < 1) {
-                g++;
+            firstLineForChanges = secondLineWithoutChanges;
+            firstLineWithoutChanges = firstLineForChanges;
+            secondLineForChanges = scanner.nextLine();
+            secondLineWithoutChanges = secondLineForChanges;
+            if (delayBeforeTheStart < 1) {
+                delayBeforeTheStart++;
                 continue;
             }
-            if (p.equals("exit the program uniq")) {
+            if (secondLineWithoutChanges.equals("exit the program uniq")) {
                 if (c) {
-                    writer.write(Integer.toString(s) + o);
+                    writer.write(Integer.toString(counterForC) + firstLineWithoutChanges);
                     writer.newLine();
                 } else {
-                    writer.write(o);
+                    writer.write(firstLineWithoutChanges);
                     writer.newLine();
                 }
                 System.out.println("Input from the console is disabled");
                 break;
             }
             if (sNum != 0) {
-                j = j.substring(sNum);
-                h = h.substring(sNum);
+                firstLineForChanges = firstLineForChanges.substring(sNum);
+                secondLineForChanges = secondLineForChanges.substring(sNum);
             }
             if (i) {
-                j = j.toLowerCase();
-                h = h.toLowerCase();
+                firstLineForChanges = firstLineForChanges.toLowerCase();
+                secondLineForChanges = secondLineForChanges.toLowerCase();
             }
-            if (!j.equals(h)) {
+            if (!firstLineForChanges.equals(secondLineForChanges)) {
                 if (c) {
-                    writer.write(Integer.toString(s) + o);
+                    writer.write(Integer.toString(counterForC) + firstLineWithoutChanges);
                     writer.newLine();
-                    s = 0;
+                    counterForC = 0;
                 } else {
-                    writer.write(o);
+                    writer.write(firstLineWithoutChanges);
                     writer.newLine();
                 }
                 if (!scanner.hasNextLine()) {
                     if (c) {
-                        writer.write(Integer.toString(s) + p);
-                        s = 0;
+                        writer.write(Integer.toString(counterForC) + secondLineWithoutChanges);
+                        counterForC = 0;
                     } else {
-                        writer.write(p);
+                        writer.write(secondLineWithoutChanges);
                     }
                 }
             } else {
                 if (u) {
                     if (!scanner.hasNextLine()) {
                         if (c) {
-                            writer.write(Integer.toString(s) + o);
+                            writer.write(Integer.toString(counterForC) + firstLineWithoutChanges);
                             writer.newLine();
-                            s = 0;
+                            counterForC = 0;
                         } else {
-                            writer.write(o);
+                            writer.write(firstLineWithoutChanges);
                             writer.newLine();
                         }
                     }
                     if (c) {
-                        s++;
+                        counterForC++;
                     }
                 } else {
                     if (c) {
-                        writer.write(Integer.toString(s) + o);
+                        writer.write(Integer.toString(counterForC) + firstLineWithoutChanges);
                         writer.newLine();
-                        s = 0;
+                        counterForC = 0;
                     } else {
-                        writer.write(o);
+                        writer.write(firstLineWithoutChanges);
                         writer.newLine();
                     }
                 }
@@ -170,7 +170,7 @@ public class Flags {
      * New elements of the class Flags starts without the values of all flags
      * To set values of flags you need to use set() methods of flags which you will find
      */
-    public Flags() {
+    Flags() {
         this.inputFileName = "";
         this.outputFileName = "";
         this.u = false;
