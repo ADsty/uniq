@@ -148,7 +148,7 @@ class Flags {
                         else changesWithoutC(firstLineWithoutChanges);
                     }
                     if (c) {
-                        counterForC++;
+                        counterForC++ ;
                     }
                 } else {
                     if (c) changesWithC(firstLineWithoutChanges);
