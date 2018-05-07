@@ -37,11 +37,11 @@ public class Uniq {
     @Argument(usage = "Sets input file name")
     private String inputFileName;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws  Exception {
         new Uniq().launch(args);
     }
 
-    private void launch(String[] args) {
+    private void launch(String[] args) throws Exception {
         Flags flags = new Flags();
         CmdLineParser parser = new CmdLineParser(this);
         try {
