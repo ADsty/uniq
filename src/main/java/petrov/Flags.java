@@ -114,8 +114,8 @@ class Flags {
             if (sNum != 0) line = line.substring(sNum);
             if (g == listForChangedLines.size()) break;
             if (c) {
+                line = Pattern.compile("\\d+").matcher(line).replaceFirst(" ");
                 line = line.substring(1);
-                line = Pattern.compile("\\d+").matcher(line).replaceFirst("");
             }
             if (line.equals(listForChangedLines.get(g))) {
                 iterator1.remove();
