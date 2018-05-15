@@ -125,13 +125,15 @@ class Flags {
     }
 
     private void writingLines() throws Exception {
-        File outputFile = new File(outputFileName);
-        BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
-        for (String line : list) {
-            writer.write(line);
-            writer.newLine();
+        if (!outputFileName.equals("outputFile")) {
+            File outputFile = new File(outputFileName);
+            BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
+            for (String line : list) {
+                writer.write(line);
+                writer.newLine();
+            }
+            writer.close();
         }
-        writer.close();
     }
 
     private void linesToTheConsole() throws Exception {
@@ -153,7 +155,7 @@ class Flags {
         listForChangedLines = new ArrayList<>();
         counterForC = 1;
         int delayBeforeTheStart = 0;
-        if (inputFileName.equals("withoutInputFile")) scannerIsEnable();
+        if (inputFileName.equals("inputFile")) scannerIsEnable();
         else scanner = new Scanner(new File(inputFileName));
         while (scanner.hasNextLine()) {
             firstLineForChanges = secondLineWithoutChanges;
@@ -190,7 +192,7 @@ class Flags {
         if (u) changesWithU();
         scanner.close();
         writingLines();
-        if (outputFileName.equals("withoutOutputFileName")) linesToTheConsole();
+        if (outputFileName.equals("outputFile")) linesToTheConsole();
     }
 
     /**

@@ -31,7 +31,7 @@ public class Uniq {
     @Option(name = "-s", usage = "When comparing line, the first N characters of each line should be ignored.")
     private int sNum;
 
-    @Option(name = "-o",  usage = "Sets output file name")
+    @Option(name = "-o", usage = "Sets output file name")
     private String outputFileName;
 
     @Argument(usage = "Sets input file name")
@@ -53,10 +53,10 @@ public class Uniq {
         if (c) flags.setC();
         if (u) flags.setU();
         if (sNum > 0) flags.setSNum(sNum);
-        if (outputFileName != null) flags.setOutputFileName(outputFileName);
-        else flags.setOutputFileName("withoutOutputFileName");
-        if (inputFileName != null) flags.setFileName(inputFileName);
-        else flags.setFileName("withoutInputFile");
+        if (null != outputFileName) flags.setOutputFileName(outputFileName);
+        else flags.setOutputFileName("outputFile");
+        if (null != inputFileName) flags.setFileName(inputFileName);
+        else flags.setFileName("inputFile");
         try {
             flags.work();
         } catch (IOException e) {
