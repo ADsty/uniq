@@ -1,7 +1,9 @@
+package petrov;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
+
+import java.util.regex.Pattern;
 
 class Flags {
     private boolean i;
@@ -14,10 +16,9 @@ class Flags {
     private String firstLineForChanges;
     private String secondLineForChanges;
     private String firstLineWithoutChanges;
-    private String secondLineWithoutChanges = "";
-    private BufferedWriter writer;
     private Scanner scanner;
-    private File forChanges;
+    private ArrayList<String> list;
+    private ArrayList<String> listForChangedLines;
 
     /**
      * Sets path to the input file
@@ -72,8 +73,8 @@ class Flags {
     }
 
     private void scannerIsDisable() throws Exception {
-        if (c) changesWithC(firstLineWithoutChanges);
-        else changesWithoutC(firstLineWithoutChanges);
+        if (c) changesWithC(firstLineWithoutChanges, firstLineForChanges);
+        else changesWithoutC(firstLineWithoutChanges, firstLineForChanges);
         System.out.println("Input from the console is disabled");
     }
 
@@ -87,23 +88,57 @@ class Flags {
         secondLineForChanges = secondLineForChanges.toLowerCase();
     }
 
-    private void changesWithC(String line) throws Exception {
-        writer.write(Integer.toString(counterForC) + line);
-        writer.newLine();
-        counterForC = 0;
+    private void changesWithC(String line, String lineWithChanges) throws Exception {
+        list.add(Integer.toString(counterForC) + line);
+        listForChangedLines.add(lineWithChanges);
+        counterForC = 1;
     }
 
-    private void changesWithoutC(String line) throws Exception {
-        writer.write(line);
-        writer.newLine();
+    private void changesWithoutC(String line, String lineWithChanges) throws Exception {
+        list.add(line);
+        listForChangedLines.add(lineWithChanges);
+    }
+
+    private void changesWithU() {
+        ListIterator<String> iterator = listForChangedLines.listIterator();
+        while (iterator.hasNext()) {
+            String line = iterator.next();
+            int count = Collections.frequency(listForChangedLines, line);
+            if (count == 1) iterator.remove();
+        }
+        int g = 0;
+        ListIterator<String> iterator1 = list.listIterator();
+        while (iterator1.hasNext()) {
+            String line = iterator1.next();
+            if (i) line = line.toLowerCase();
+            if (sNum != 0) line = line.substring(sNum);
+            if (g == listForChangedLines.size()) break;
+            if (c) {
+                line = line.substring(1);
+                line = Pattern.compile("\\d+").matcher(line).replaceFirst("");
+            }
+            if (line.equals(listForChangedLines.get(g))) {
+                iterator1.remove();
+                g++;
+            }
+        }
+    }
+
+    private void writingLines() throws Exception {
+        File outputFile = new File(outputFileName);
+        BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
+        for (String line : list) {
+            writer.write(line);
+            writer.newLine();
+        }
+        writer.close();
     }
 
     private void linesToTheConsole() throws Exception {
-        Scanner iterator1 = new Scanner(forChanges);
+        ListIterator iterator1 = list.listIterator();
         while (iterator1.hasNext()) {
             System.out.println(iterator1.next());
         }
-        iterator1.close();
     }
 
     /**
@@ -113,13 +148,13 @@ class Flags {
      * @throws IOException
      */
     void work() throws Exception {
-        ArrayList<String> listForU = new ArrayList<>();
-        counterForC = 0;
+        String secondLineWithoutChanges = "";
+        list = new ArrayList<>();
+        listForChangedLines = new ArrayList<>();
+        counterForC = 1;
         int delayBeforeTheStart = 0;
-        if (inputFileName.equals("")) scannerIsEnable();
+        if (inputFileName.equals("withoutInputFile")) scannerIsEnable();
         else scanner = new Scanner(new File(inputFileName));
-        forChanges = new File("forChanges.txt");
-        writer = new BufferedWriter(new FileWriter(forChanges));
         while (scanner.hasNextLine()) {
             firstLineForChanges = secondLineWithoutChanges;
             firstLineWithoutChanges = firstLineForChanges;
@@ -136,47 +171,33 @@ class Flags {
             if (sNum != 0) changesWithS();
             if (i) changesWithI();
             if (!firstLineForChanges.equals(secondLineForChanges)) {
-                if (u) {
-                    if (!listForU.contains(firstLineForChanges)) listForU.add(firstLineForChanges);
-                    else continue;
-                }
-                if (c) changesWithC(firstLineWithoutChanges);
-                else changesWithoutC(firstLineWithoutChanges);
+                if (c) changesWithC(firstLineWithoutChanges, firstLineForChanges);
+                else changesWithoutC(firstLineWithoutChanges, firstLineForChanges);
                 if (!scanner.hasNextLine()) {
-                    if (u) {
-                        if (!listForU.contains(firstLineForChanges)) {
-                            if (c) changesWithC(secondLineWithoutChanges);
-                            else writer.write(secondLineWithoutChanges);
-                        }
-                    } else {
-                        if (c) changesWithC(secondLineWithoutChanges);
-                        else writer.write(secondLineWithoutChanges);
-                    }
+                    if (c) changesWithC(secondLineWithoutChanges, secondLineForChanges);
+                    else changesWithoutC(secondLineWithoutChanges, secondLineForChanges);
                 }
             } else {
                 if (!scanner.hasNextLine()) {
-                    if (c) changesWithC(firstLineWithoutChanges);
-                    else changesWithoutC(firstLineWithoutChanges);
+                    if (c) changesWithC(firstLineWithoutChanges, firstLineForChanges);
+                    else changesWithoutC(firstLineWithoutChanges, firstLineForChanges);
                 }
                 if (c) {
                     counterForC++;
                 }
             }
         }
-        writer.close();
+        if (u) changesWithU();
         scanner.close();
-        if (!outputFileName.equals("")) forChanges.renameTo(new File(outputFileName));
-        else linesToTheConsole();
-        forChanges.delete();
+        writingLines();
+        if (outputFileName.equals("withoutOutputFileName")) linesToTheConsole();
     }
 
     /**
-     * New elements of the class java.Flags starts without the values of all flags
+     * New elements of the class Flags starts without the values of all flags
      * To set values of flags you need to use set() methods of flags which you will find
      */
     Flags() {
-        this.inputFileName = "";
-        this.outputFileName = "";
         this.u = false;
         this.c = false;
         this.i = false;

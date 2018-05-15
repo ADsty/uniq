@@ -1,3 +1,4 @@
+package petrov;
 
 import org.junit.After;
 import org.junit.Before;
@@ -12,7 +13,6 @@ public class FlagsTest {
     private Flags Flags;
     private File file1;
     private Boolean equals;
-    private Scanner iterator;
     private Scanner iterator1;
 
     @Before
@@ -25,9 +25,16 @@ public class FlagsTest {
 
     @After
     public void deletingUsedFiles() {
+        file1.delete();
+    }
+
+    private void comparingTwoFiles() throws Exception {
+        Scanner iterator = new Scanner(file1);
+        while (iterator.hasNextLine() && iterator1.hasNextLine()) {
+            if (!iterator.nextLine().equals(iterator1.nextLine())) equals = false;
+        }
         iterator.close();
         iterator1.close();
-        file1.delete();
     }
 
     @Test
@@ -38,11 +45,8 @@ public class FlagsTest {
         Flags.setI();
         Flags.setSNum(2);
         Flags.work();
-        iterator = new Scanner(file1);
         iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileOne"));
-        while (iterator.hasNextLine() && iterator1.hasNextLine()) {
-            if (!iterator.nextLine().equals(iterator1.nextLine())) equals = false;
-        }
+        comparingTwoFiles();
         assertEquals(true, equals);
     }
 
@@ -53,11 +57,8 @@ public class FlagsTest {
         Flags.setC();
         Flags.setI();
         Flags.work();
-        iterator = new Scanner(file1);
         iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileTwo"));
-        while (iterator.hasNextLine() && iterator1.hasNextLine()) {
-            if (!iterator.nextLine().equals(iterator1.nextLine())) equals = false;
-        }
+        comparingTwoFiles();
         assertEquals(true, equals);
     }
 
@@ -68,11 +69,8 @@ public class FlagsTest {
         Flags.setI();
         Flags.setSNum(8);
         Flags.work();
-        iterator = new Scanner(file1);
         iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileThree"));
-        while (iterator.hasNextLine() && iterator1.hasNextLine()) {
-            if (!iterator.nextLine().equals(iterator1.nextLine())) equals = false;
-        }
+        comparingTwoFiles();
         assertEquals(true, equals);
     }
 
@@ -83,11 +81,8 @@ public class FlagsTest {
         Flags.setC();
         Flags.setSNum(4);
         Flags.work();
-        iterator = new Scanner(file1);
         iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileFour"));
-        while (iterator.hasNextLine() && iterator1.hasNextLine()) {
-            if (!iterator.nextLine().equals(iterator1.nextLine())) equals = false;
-        }
+        comparingTwoFiles();
         assertEquals(true, equals);
     }
 
@@ -97,11 +92,8 @@ public class FlagsTest {
         Flags.setU();
         Flags.setI();
         Flags.work();
-        iterator = new Scanner(file1);
         iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileFive"));
-        while (iterator.hasNextLine() && iterator1.hasNextLine()) {
-            if (!iterator.nextLine().equals(iterator1.nextLine())) equals = false;
-        }
+        comparingTwoFiles();
         assertEquals(true, equals);
     }
 
@@ -111,11 +103,8 @@ public class FlagsTest {
         Flags.setU();
         Flags.setSNum(4);
         Flags.work();
-        iterator = new Scanner(file1);
         iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileSix"));
-        while (iterator.hasNextLine() && iterator1.hasNextLine()) {
-            if (!iterator.nextLine().equals(iterator1.nextLine())) equals = false;
-        }
+        comparingTwoFiles();
         assertEquals(true, equals);
     }
 
@@ -125,11 +114,8 @@ public class FlagsTest {
         Flags.setU();
         Flags.setC();
         Flags.work();
-        iterator = new Scanner(file1);
         iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileSeven"));
-        while (iterator.hasNextLine() && iterator1.hasNextLine()) {
-            if (!iterator.nextLine().equals(iterator1.nextLine())) equals = false;
-        }
+        comparingTwoFiles();
         assertEquals(true, equals);
     }
 
@@ -138,11 +124,8 @@ public class FlagsTest {
         Flags.setFileName("src/test/resources/InputFilesForTests/FileEight");
         Flags.setU();
         Flags.work();
-        iterator = new Scanner(file1);
         iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileEight"));
-        while (iterator.hasNextLine() && iterator1.hasNextLine()) {
-            if (!iterator.nextLine().equals(iterator1.nextLine())) equals = false;
-        }
+        comparingTwoFiles();
         assertEquals(true, equals);
     }
 
@@ -151,11 +134,8 @@ public class FlagsTest {
         Flags.setFileName("src/test/resources/InputFilesForTests/FileNine");
         Flags.setC();
         Flags.work();
-        iterator = new Scanner(file1);
         iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileNine"));
-        while (iterator.hasNextLine() && iterator1.hasNextLine()) {
-            if (!iterator.nextLine().equals(iterator1.nextLine())) equals = false;
-        }
+        comparingTwoFiles();
         assertEquals(true, equals);
     }
 
@@ -163,11 +143,8 @@ public class FlagsTest {
     public void tenthCombination() throws Exception {
         Flags.setFileName("src/test/resources/InputFilesForTests/FileTen");
         Flags.work();
-        iterator = new Scanner(file1);
         iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileTen"));
-        while (iterator.hasNextLine() && iterator1.hasNextLine()) {
-            if (!iterator.nextLine().equals(iterator1.nextLine())) equals = false;
-        }
+        comparingTwoFiles();
         assertEquals(true, equals);
     }
 }

@@ -1,3 +1,2 @@
-0This file is for testing combination of flags u , c
-2This line will not be in the output file
-0but this will be
+1This file is for testing combination of flags u , c
+1but this will be

@@ -1,3 +1,4 @@
+package petrov;
 
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
@@ -9,7 +10,7 @@ import java.io.IOException;
 /**
  * Command-line launcher of the program
  * Combining sequences of identical consecutive lines in a file into one
- * java.Flags which you need to set for identify how lines will be compared:
+ * Flags which you need to set for identify how lines will be compared:
  * -i     means that while comparing lines, case should be ignored
  * -s N   means that while comparing lines, the first N characters of each line should be ignored
  * -u     means that only unique lines should be output as a result
@@ -30,13 +31,13 @@ public class Uniq {
     @Option(name = "-s", usage = "When comparing line, the first N characters of each line should be ignored.")
     private int sNum;
 
-    @Option(name = "-o", usage = "Sets output file name")
+    @Option(name = "-o",  usage = "Sets output file name")
     private String outputFileName;
 
     @Argument(usage = "Sets input file name")
     private String inputFileName;
 
-    public static void main(String[] args) throws  Exception {
+    public static void main(String[] args) throws Exception {
         new Uniq().launch(args);
     }
 
@@ -52,8 +53,10 @@ public class Uniq {
         if (c) flags.setC();
         if (u) flags.setU();
         if (sNum > 0) flags.setSNum(sNum);
-        if (!outputFileName.equals("")) flags.setOutputFileName(outputFileName);
-        if (!inputFileName.equals("")) flags.setFileName(inputFileName);
+        if (outputFileName != null) flags.setOutputFileName(outputFileName);
+        else flags.setOutputFileName("withoutOutputFileName");
+        if (inputFileName != null) flags.setFileName(inputFileName);
+        else flags.setFileName("withoutInputFile");
         try {
             flags.work();
         } catch (IOException e) {
