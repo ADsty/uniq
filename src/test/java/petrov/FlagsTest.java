@@ -11,30 +11,29 @@ import static org.junit.Assert.*;
 
 public class FlagsTest {
     private Flags Flags;
-    private File file1;
-    private Boolean equals;
     private Scanner iterator1;
 
     @Before
     public void creatingNewElements() throws Exception {
-        equals = true;
         Flags = new Flags();
-        file1 = new File("output.txt");
-        Flags.setOutputFileName("output.txt");
+        File file1 = new File("output.txt");
+        Flags.setOutputFileName(file1.getPath());
     }
 
     @After
     public void deletingUsedFiles() {
-        file1.delete();
+        new File("output.txt").delete();
     }
 
-    private void comparingTwoFiles() throws Exception {
-        Scanner iterator = new Scanner(file1);
+    private boolean comparingTwoFiles() throws Exception {
+        Boolean equals = true;
+        Scanner iterator = new Scanner(new File("output.txt"));
         while (iterator.hasNextLine() && iterator1.hasNextLine()) {
             if (!iterator.nextLine().equals(iterator1.nextLine())) equals = false;
         }
         iterator.close();
         iterator1.close();
+        return equals;
     }
 
     @Test
@@ -46,8 +45,7 @@ public class FlagsTest {
         Flags.setSNum(2);
         Flags.work();
         iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileOne"));
-        comparingTwoFiles();
-        assertEquals(true, equals);
+        assertEquals(true, comparingTwoFiles());
     }
 
     @Test
@@ -58,8 +56,7 @@ public class FlagsTest {
         Flags.setI();
         Flags.work();
         iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileTwo"));
-        comparingTwoFiles();
-        assertEquals(true, equals);
+        assertEquals(true, comparingTwoFiles());
     }
 
     @Test
@@ -70,8 +67,7 @@ public class FlagsTest {
         Flags.setSNum(8);
         Flags.work();
         iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileThree"));
-        comparingTwoFiles();
-        assertEquals(true, equals);
+        assertEquals(true, comparingTwoFiles());
     }
 
     @Test
@@ -82,8 +78,7 @@ public class FlagsTest {
         Flags.setSNum(4);
         Flags.work();
         iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileFour"));
-        comparingTwoFiles();
-        assertEquals(true, equals);
+        assertEquals(true, comparingTwoFiles());
     }
 
     @Test
@@ -93,8 +88,7 @@ public class FlagsTest {
         Flags.setI();
         Flags.work();
         iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileFive"));
-        comparingTwoFiles();
-        assertEquals(true, equals);
+        assertEquals(true, comparingTwoFiles());
     }
 
     @Test
@@ -104,8 +98,7 @@ public class FlagsTest {
         Flags.setSNum(4);
         Flags.work();
         iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileSix"));
-        comparingTwoFiles();
-        assertEquals(true, equals);
+        assertEquals(true, comparingTwoFiles());
     }
 
     @Test
@@ -115,8 +108,7 @@ public class FlagsTest {
         Flags.setC();
         Flags.work();
         iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileSeven"));
-        comparingTwoFiles();
-        assertEquals(true, equals);
+        assertEquals(true, comparingTwoFiles());
     }
 
     @Test
@@ -125,8 +117,7 @@ public class FlagsTest {
         Flags.setU();
         Flags.work();
         iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileEight"));
-        comparingTwoFiles();
-        assertEquals(true, equals);
+        assertEquals(true, comparingTwoFiles());
     }
 
     @Test
@@ -135,8 +126,7 @@ public class FlagsTest {
         Flags.setC();
         Flags.work();
         iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileNine"));
-        comparingTwoFiles();
-        assertEquals(true, equals);
+        assertEquals(true, comparingTwoFiles());
     }
 
     @Test
@@ -144,7 +134,6 @@ public class FlagsTest {
         Flags.setFileName("src/test/resources/InputFilesForTests/FileTen");
         Flags.work();
         iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileTen"));
-        comparingTwoFiles();
-        assertEquals(true, equals);
+        assertEquals(true, comparingTwoFiles());
     }
 }

@@ -125,7 +125,7 @@ class Flags {
     }
 
     private void writingLines() throws Exception {
-        if (!outputFileName.equals("outputFile")) {
+        if (null != outputFileName) {
             File outputFile = new File(outputFileName);
             BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
             for (String line : list) {
@@ -155,20 +155,20 @@ class Flags {
         listForChangedLines = new ArrayList<>();
         counterForC = 1;
         int delayBeforeTheStart = 0;
-        if (inputFileName.equals("inputFile")) scannerIsEnable();
+        if (null == inputFileName) scannerIsEnable();
         else scanner = new Scanner(new File(inputFileName));
         while (scanner.hasNextLine()) {
             firstLineForChanges = secondLineWithoutChanges;
             firstLineWithoutChanges = firstLineForChanges;
             secondLineForChanges = scanner.nextLine();
             secondLineWithoutChanges = secondLineForChanges;
-            if (delayBeforeTheStart < 1) {
-                delayBeforeTheStart++;
-                continue;
-            }
             if (secondLineWithoutChanges.equals("exit the program uniq")) {
                 scannerIsDisable();
                 break;
+            }
+            if (delayBeforeTheStart < 1) {
+                delayBeforeTheStart++;
+                continue;
             }
             if (sNum != 0) changesWithS();
             if (i) changesWithI();
@@ -192,7 +192,7 @@ class Flags {
         if (u) changesWithU();
         scanner.close();
         writingLines();
-        if (outputFileName.equals("outputFile")) linesToTheConsole();
+        if (null == outputFileName) linesToTheConsole();
     }
 
     /**

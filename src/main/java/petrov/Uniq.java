@@ -5,6 +5,7 @@ import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -31,10 +32,10 @@ public class Uniq {
     @Option(name = "-s", usage = "When comparing line, the first N characters of each line should be ignored.")
     private int sNum;
 
-    @Option(name = "-o", usage = "Sets output file name")
+    @Option(name = "-o", metaVar = "output file", usage = "Sets output file name")
     private String outputFileName;
 
-    @Argument(usage = "Sets input file name")
+    @Argument(metaVar = "input file", usage = "Sets input file name")
     private String inputFileName;
 
     public static void main(String[] args) throws Exception {
@@ -48,15 +49,20 @@ public class Uniq {
             parser.parseArgument(args);
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());
+            System.err.println("valid values of flags is [-i] [-u] [-c] [-s num] [-o ofile] [file]");
+            parser.printUsage(System.err);
+            return;
         }
         if (i) flags.setI();
         if (c) flags.setC();
         if (u) flags.setU();
         if (sNum > 0) flags.setSNum(sNum);
+        else if (sNum != 0) throw new IllegalArgumentException("invalid value for sNum");
         if (null != outputFileName) flags.setOutputFileName(outputFileName);
-        else flags.setOutputFileName("outputFile");
-        if (null != inputFileName) flags.setFileName(inputFileName);
-        else flags.setFileName("inputFile");
+        if (null != inputFileName) {
+            if (new File(inputFileName).exists()) flags.setFileName(inputFileName);
+            else throw new IllegalArgumentException("invalid value for input file");
+        }
         try {
             flags.work();
         } catch (IOException e) {
