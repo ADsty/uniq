@@ -13,9 +13,6 @@ class Flags {
     private int counterForC;
     private String outputFileName;
     private String inputFileName;
-    private String firstLineForChanges;
-    private String secondLineForChanges;
-    private String firstLineWithoutChanges;
     private Scanner scanner;
     private ArrayList<String> list;
     private ArrayList<String> listForChangedLines;
@@ -66,37 +63,61 @@ class Flags {
         this.sNum = num;
     }
 
-    private void scannerIsEnable() {
-        scanner = new Scanner(System.in);
-        System.out.println("Input from the console is enabled");
-        System.out.println("To finish typing write : exit the program uniq");
+    private void scannerIsEnable() throws Exception {
+        if (null == inputFileName) {
+            scanner = new Scanner(System.in);
+            System.out.println("Input from the console is enabled");
+            System.out.println("To finish typing write : exit the program uniq");
+        } else scanner = new Scanner(new File(inputFileName));
     }
 
-    private void scannerIsDisable() throws Exception {
-        if (c) changesWithC(firstLineWithoutChanges, firstLineForChanges);
-        else changesWithoutC(firstLineWithoutChanges, firstLineForChanges);
+    private void scannerIsDisable(String line1, String line2) throws Exception {
+        if (c) {
+            list.add(Integer.toString(counterForC) + line1);
+            listForChangedLines.add(line2);
+            counterForC = 1;
+        } else {
+            list.add(line1);
+            listForChangedLines.add(line2);
+        }
         System.out.println("Input from the console is disabled");
     }
 
-    private void changesWithS() {
-        firstLineForChanges = firstLineForChanges.substring(sNum);
-        secondLineForChanges = secondLineForChanges.substring(sNum);
+    private void changesWhenLinesIsNotEqual(String line1, String line2, String line3, String line4) {
+        if (c) {
+            list.add(Integer.toString(counterForC) + line2);
+            listForChangedLines.add(line1);
+            counterForC = 1;
+        } else {
+            list.add(line2);
+            listForChangedLines.add(line1);
+        }
+        if (!scanner.hasNextLine()) {
+            if (c) {
+                list.add(Integer.toString(counterForC) + line4);
+                listForChangedLines.add(line3);
+                counterForC = 1;
+            } else {
+                list.add(line4);
+                listForChangedLines.add(line3);
+            }
+        }
     }
 
-    private void changesWithI() {
-        firstLineForChanges = firstLineForChanges.toLowerCase();
-        secondLineForChanges = secondLineForChanges.toLowerCase();
-    }
-
-    private void changesWithC(String line, String lineWithChanges) throws Exception {
-        list.add(Integer.toString(counterForC) + line);
-        listForChangedLines.add(lineWithChanges);
-        counterForC = 1;
-    }
-
-    private void changesWithoutC(String line, String lineWithChanges) throws Exception {
-        list.add(line);
-        listForChangedLines.add(lineWithChanges);
+    private void changesWhenLinesIsEqual(String line1, String line2) {
+        if (!scanner.hasNextLine()) {
+            if (c) {
+                list.add(Integer.toString(counterForC) + line2);
+                listForChangedLines.add(line1);
+                counterForC = 1;
+            } else {
+                list.add(line2);
+                listForChangedLines.add(line1);
+            }
+        }
+        if (c) {
+            counterForC++;
+        }
     }
 
     private void changesWithU() {
@@ -155,38 +176,33 @@ class Flags {
         listForChangedLines = new ArrayList<>();
         counterForC = 1;
         int delayBeforeTheStart = 0;
-        if (null == inputFileName) scannerIsEnable();
-        else scanner = new Scanner(new File(inputFileName));
+        scannerIsEnable();
         while (scanner.hasNextLine()) {
-            firstLineForChanges = secondLineWithoutChanges;
-            firstLineWithoutChanges = firstLineForChanges;
-            secondLineForChanges = scanner.nextLine();
+            String firstLineForChanges = secondLineWithoutChanges;
+            String firstLineWithoutChanges = firstLineForChanges;
+            String secondLineForChanges = scanner.nextLine();
             secondLineWithoutChanges = secondLineForChanges;
             if (secondLineWithoutChanges.equals("exit the program uniq")) {
-                scannerIsDisable();
+                scannerIsDisable(firstLineForChanges, firstLineWithoutChanges);
                 break;
             }
             if (delayBeforeTheStart < 1) {
                 delayBeforeTheStart++;
                 continue;
             }
-            if (sNum != 0) changesWithS();
-            if (i) changesWithI();
+            if (sNum != 0) {
+                firstLineForChanges = firstLineForChanges.substring(sNum);
+                secondLineForChanges = secondLineForChanges.substring(sNum);
+            }
+            if (i) {
+                firstLineForChanges = firstLineForChanges.toLowerCase();
+                secondLineForChanges = secondLineForChanges.toLowerCase();
+            }
             if (!firstLineForChanges.equals(secondLineForChanges)) {
-                if (c) changesWithC(firstLineWithoutChanges, firstLineForChanges);
-                else changesWithoutC(firstLineWithoutChanges, firstLineForChanges);
-                if (!scanner.hasNextLine()) {
-                    if (c) changesWithC(secondLineWithoutChanges, secondLineForChanges);
-                    else changesWithoutC(secondLineWithoutChanges, secondLineForChanges);
-                }
+                changesWhenLinesIsNotEqual(firstLineForChanges, firstLineWithoutChanges,
+                        secondLineForChanges, secondLineWithoutChanges);
             } else {
-                if (!scanner.hasNextLine()) {
-                    if (c) changesWithC(firstLineWithoutChanges, firstLineForChanges);
-                    else changesWithoutC(firstLineWithoutChanges, firstLineForChanges);
-                }
-                if (c) {
-                    counterForC++;
-                }
+                changesWhenLinesIsEqual(firstLineForChanges, firstLineWithoutChanges);
             }
         }
         if (u) changesWithU();

@@ -11,7 +11,6 @@ import static org.junit.Assert.*;
 
 public class FlagsTest {
     private Flags Flags;
-    private Scanner iterator1;
 
     @Before
     public void creatingNewElements() throws Exception {
@@ -25,9 +24,10 @@ public class FlagsTest {
         new File("output.txt").delete();
     }
 
-    private boolean comparingTwoFiles() throws Exception {
+    private boolean comparingTwoFiles(String outputFile) throws Exception {
         Boolean equals = true;
         Scanner iterator = new Scanner(new File("output.txt"));
+        Scanner iterator1 = new Scanner(new File(outputFile));
         while (iterator.hasNextLine() && iterator1.hasNextLine()) {
             if (!iterator.nextLine().equals(iterator1.nextLine())) equals = false;
         }
@@ -44,8 +44,7 @@ public class FlagsTest {
         Flags.setI();
         Flags.setSNum(2);
         Flags.work();
-        iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileOne"));
-        assertEquals(true, comparingTwoFiles());
+        assertEquals(true, comparingTwoFiles("src/test/resources/OutputFilesForTests/OutputFileOne"));
     }
 
     @Test
@@ -55,8 +54,7 @@ public class FlagsTest {
         Flags.setC();
         Flags.setI();
         Flags.work();
-        iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileTwo"));
-        assertEquals(true, comparingTwoFiles());
+        assertEquals(true, comparingTwoFiles("src/test/resources/OutputFilesForTests/OutputFileTwo"));
     }
 
     @Test
@@ -66,8 +64,7 @@ public class FlagsTest {
         Flags.setI();
         Flags.setSNum(8);
         Flags.work();
-        iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileThree"));
-        assertEquals(true, comparingTwoFiles());
+        assertEquals(true, comparingTwoFiles("src/test/resources/OutputFilesForTests/OutputFileThree"));
     }
 
     @Test
@@ -77,8 +74,7 @@ public class FlagsTest {
         Flags.setC();
         Flags.setSNum(4);
         Flags.work();
-        iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileFour"));
-        assertEquals(true, comparingTwoFiles());
+        assertEquals(true, comparingTwoFiles("src/test/resources/OutputFilesForTests/OutputFileFour"));
     }
 
     @Test
@@ -87,8 +83,7 @@ public class FlagsTest {
         Flags.setU();
         Flags.setI();
         Flags.work();
-        iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileFive"));
-        assertEquals(true, comparingTwoFiles());
+        assertEquals(true, comparingTwoFiles("src/test/resources/OutputFilesForTests/OutputFileFive"));
     }
 
     @Test
@@ -97,8 +92,7 @@ public class FlagsTest {
         Flags.setU();
         Flags.setSNum(4);
         Flags.work();
-        iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileSix"));
-        assertEquals(true, comparingTwoFiles());
+        assertEquals(true, comparingTwoFiles("src/test/resources/OutputFilesForTests/OutputFileSix"));
     }
 
     @Test
@@ -107,8 +101,7 @@ public class FlagsTest {
         Flags.setU();
         Flags.setC();
         Flags.work();
-        iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileSeven"));
-        assertEquals(true, comparingTwoFiles());
+        assertEquals(true, comparingTwoFiles("src/test/resources/OutputFilesForTests/OutputFileSeven"));
     }
 
     @Test
@@ -116,8 +109,7 @@ public class FlagsTest {
         Flags.setFileName("src/test/resources/InputFilesForTests/FileEight");
         Flags.setU();
         Flags.work();
-        iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileEight"));
-        assertEquals(true, comparingTwoFiles());
+        assertEquals(true, comparingTwoFiles("src/test/resources/OutputFilesForTests/OutputFileEight"));
     }
 
     @Test
@@ -125,15 +117,13 @@ public class FlagsTest {
         Flags.setFileName("src/test/resources/InputFilesForTests/FileNine");
         Flags.setC();
         Flags.work();
-        iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileNine"));
-        assertEquals(true, comparingTwoFiles());
+        assertEquals(true, comparingTwoFiles("src/test/resources/OutputFilesForTests/OutputFileNine"));
     }
 
     @Test
     public void tenthCombination() throws Exception {
         Flags.setFileName("src/test/resources/InputFilesForTests/FileTen");
         Flags.work();
-        iterator1 = new Scanner(new File("src/test/resources/OutputFilesForTests/OutputFileTen"));
-        assertEquals(true, comparingTwoFiles());
+        assertEquals(true, comparingTwoFiles("src/test/resources/OutputFilesForTests/OutputFileTen"));
     }
 }
