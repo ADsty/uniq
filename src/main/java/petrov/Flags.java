@@ -13,9 +13,6 @@ class Flags {
     private int counterForC;
     private String outputFileName;
     private String inputFileName;
-    private Scanner scanner;
-    private ArrayList<String> list;
-    private ArrayList<String> listForChangedLines;
 
     /**
      * Sets path to the input file
@@ -63,15 +60,20 @@ class Flags {
         this.sNum = num;
     }
 
-    private void scannerIsEnable() throws Exception {
+    private Scanner scannerIsEnable() throws Exception {
+        Scanner scanner;
         if (null == inputFileName) {
             scanner = new Scanner(System.in);
             System.out.println("Input from the console is enabled");
             System.out.println("To finish typing write : exit the program uniq");
-        } else scanner = new Scanner(new File(inputFileName));
+        } else {
+            scanner = new Scanner(new File(inputFileName));
+        }
+        return scanner;
     }
 
-    private void scannerIsDisable(String line1, String line2) throws Exception {
+    private void scannerIsDisable(String line1, String line2, ArrayList<String> list,
+                                  ArrayList<String> listForChangedLines, Scanner scanner) throws Exception {
         if (c) {
             list.add(Integer.toString(counterForC) + line1);
             listForChangedLines.add(line2);
@@ -81,9 +83,11 @@ class Flags {
             listForChangedLines.add(line2);
         }
         System.out.println("Input from the console is disabled");
+        scanner.close();
     }
 
-    private void changesWhenLinesIsNotEqual(String line1, String line2, String line3, String line4) {
+    private void changesWhenLinesIsNotEqual(String line1, String line2, String line3, String line4, ArrayList<String> list,
+                                            ArrayList<String> listForChangedLines, Scanner scanner) {
         if (c) {
             list.add(Integer.toString(counterForC) + line2);
             listForChangedLines.add(line1);
@@ -104,7 +108,8 @@ class Flags {
         }
     }
 
-    private void changesWhenLinesIsEqual(String line1, String line2) {
+    private void changesWhenLinesIsEqual(String line1, String line2, ArrayList<String> list,
+                                         ArrayList<String> listForChangedLines, Scanner scanner) {
         if (!scanner.hasNextLine()) {
             if (c) {
                 list.add(Integer.toString(counterForC) + line2);
@@ -120,7 +125,7 @@ class Flags {
         }
     }
 
-    private void changesWithU() {
+    private void changesWithU(ArrayList<String> list, ArrayList<String> listForChangedLines) {
         ListIterator<String> iterator = listForChangedLines.listIterator();
         while (iterator.hasNext()) {
             String line = iterator.next();
@@ -145,7 +150,7 @@ class Flags {
         }
     }
 
-    private void writingLines() throws Exception {
+    private void writingLines(ArrayList<String> list) throws Exception {
         if (null != outputFileName) {
             File outputFile = new File(outputFileName);
             BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
@@ -157,7 +162,7 @@ class Flags {
         }
     }
 
-    private void linesToTheConsole() throws Exception {
+    private void linesToTheConsole(ArrayList list) throws Exception {
         ListIterator iterator1 = list.listIterator();
         while (iterator1.hasNext()) {
             System.out.println(iterator1.next());
@@ -172,18 +177,18 @@ class Flags {
      */
     void work() throws Exception {
         String secondLineWithoutChanges = "";
-        list = new ArrayList<>();
-        listForChangedLines = new ArrayList<>();
+        ArrayList<String> list = new ArrayList<>();
+        ArrayList<String> listForChangedLines = new ArrayList<>();
         counterForC = 1;
         int delayBeforeTheStart = 0;
-        scannerIsEnable();
+        Scanner scanner = scannerIsEnable();
         while (scanner.hasNextLine()) {
             String firstLineForChanges = secondLineWithoutChanges;
             String firstLineWithoutChanges = firstLineForChanges;
             String secondLineForChanges = scanner.nextLine();
             secondLineWithoutChanges = secondLineForChanges;
             if (secondLineWithoutChanges.equals("exit the program uniq")) {
-                scannerIsDisable(firstLineForChanges, firstLineWithoutChanges);
+                scannerIsDisable(firstLineForChanges, firstLineWithoutChanges, list, listForChangedLines, scanner);
                 break;
             }
             if (delayBeforeTheStart < 1) {
@@ -200,15 +205,14 @@ class Flags {
             }
             if (!firstLineForChanges.equals(secondLineForChanges)) {
                 changesWhenLinesIsNotEqual(firstLineForChanges, firstLineWithoutChanges,
-                        secondLineForChanges, secondLineWithoutChanges);
+                        secondLineForChanges, secondLineWithoutChanges, list, listForChangedLines, scanner);
             } else {
-                changesWhenLinesIsEqual(firstLineForChanges, firstLineWithoutChanges);
+                changesWhenLinesIsEqual(firstLineForChanges, firstLineWithoutChanges, list, listForChangedLines, scanner);
             }
         }
-        if (u) changesWithU();
-        scanner.close();
-        writingLines();
-        if (null == outputFileName) linesToTheConsole();
+        if (u) changesWithU(list, listForChangedLines);
+        writingLines(list);
+        if (null == outputFileName) linesToTheConsole(list);
     }
 
     /**
